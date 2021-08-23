@@ -16,6 +16,7 @@ client.connect(err => {
   const toursCollection = client.db(`${process.env.DB_NAME}`).collection("travioTours");
   const orderedCollection = client.db(`${process.env.DB_NAME}`).collection("orderedTours");
   const adminCollection = client.db(`${process.env.DB_NAME}`).collection("admin");
+  const reviewCollection = client.db(`${process.env.DB_NAME}`).collection("review");
 
   app.post('/addTour', (req, res) => {
     const tour = req.body;
@@ -72,6 +73,33 @@ client.connect(err => {
     adminCollection.insertOne(admin)
       .then(result => {
         res.send(result.insertedCount > 0)
+      })
+  })
+
+
+  app.post('/addReview',(req,res)=>{
+    const review = req.body;
+    reviewCollection.insertOne(review)
+    .then(result => {
+      res.send(result.insertedCount > 0)
+    })
+
+  })
+
+  app.get('/review',(req,res)=>{
+    reviewCollection.find({})
+    .toArray((err,doc)=>{
+      res.send(doc)
+    })
+  })
+
+  app.post('/isAdmin', (req, res) => {
+    const email = req.body.email;
+    console.log(email);
+    adminCollection.find({ adminEmail: email })
+      .toArray((err, documents) => {
+        res.send(documents.length>0);
+        console.log(documents)
       })
   })
 
