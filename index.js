@@ -33,6 +33,15 @@ client.connect(err => {
         // console.log(documents)
       })
   })
+  app.delete('/deleteTour/:id',(req,res)=>{
+    const id = req.params.id;
+    console.log(id);
+          toursCollection.deleteOne({_id: ObjectId(id)}, (err, result)=>{
+              if(!err){
+                  res.send({count: 1})
+              }
+          })
+  })
 
   app.get('/tour/:id', (req, res) => {
     const id = req.params.id;
